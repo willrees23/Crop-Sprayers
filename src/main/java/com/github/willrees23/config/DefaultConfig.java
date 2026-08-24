@@ -4,7 +4,7 @@ import de.exlll.configlib.Comment;
 import de.exlll.configlib.Configuration;
 
 @Configuration
-public final class SprayerConfig {
+public final class DefaultConfig {
 
     @Comment("Radius, in blocks, that a sprayer affects.")
     private int radius = 5;

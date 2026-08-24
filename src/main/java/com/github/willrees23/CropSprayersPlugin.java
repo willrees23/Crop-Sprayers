@@ -1,7 +1,9 @@
 package com.github.willrees23;
 
 import com.github.willrees23.command.CropSprayersCommand;
-import com.github.willrees23.config.SprayerConfig;
+import com.github.willrees23.command.actions.SpawnSubCommand;
+import com.github.willrees23.config.DefaultConfig;
+import com.github.willrees23.config.MessagesConfig;
 import de.exlll.configlib.ConfigLib;
 import de.exlll.configlib.YamlConfigurations;
 import lombok.Getter;
@@ -19,16 +21,18 @@ public class CropSprayersPlugin extends JavaPlugin {
     @Getter
     private Lamp<BukkitCommandActor> lamp;
     @Getter
-    private SprayerConfig config;
+    private DefaultConfig defaultConfig;
+    @Getter
+    private MessagesConfig messagesConfig;
 
     @Override
     public void onEnable() {
         instance = this;
 
-        reloadSprayerConfig();
+        reloadAllConfigs();
 
         lamp = BukkitLamp.builder(this).build();
-        lamp.register(new CropSprayersCommand());
+        lamp.register(new CropSprayersCommand(), new SpawnSubCommand());
     }
 
     @Override
@@ -38,12 +42,22 @@ public class CropSprayersPlugin extends JavaPlugin {
         }
     }
 
-    public void reloadSprayerConfig() {
-        Path path = getDataFolder().toPath().resolve("config.yml");
-        config = YamlConfigurations.update(path, SprayerConfig.class, ConfigLib.BUKKIT_DEFAULT_PROPERTIES);
+    public void reloadAllConfigs() {
+        reloadDefaultConfig();
+        reloadMessagesConfig();
     }
 
-    public SprayerConfig sprayerConfig() {
-        return config;
+    public void reloadDefaultConfig() {
+        Path path = getDataFolder().toPath().resolve("config.yml");
+        defaultConfig = YamlConfigurations.update(path, DefaultConfig.class, ConfigLib.BUKKIT_DEFAULT_PROPERTIES);
+    }
+
+    public void reloadMessagesConfig() {
+        Path path = getDataFolder().toPath().resolve("messages.yml");
+        messagesConfig = YamlConfigurations.update(path, MessagesConfig.class, ConfigLib.BUKKIT_DEFAULT_PROPERTIES);
+    }
+
+    public DefaultConfig sprayerConfig() {
+        return defaultConfig;
     }
 }
