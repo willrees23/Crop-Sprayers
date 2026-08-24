@@ -1,6 +1,8 @@
 package com.github.willrees23.command.actions;
 
 import com.github.willrees23.CropSprayersPlugin;
+import com.github.willrees23.sprayer.CropType;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Description;
@@ -26,5 +28,13 @@ public class SpawnSubCommand {
             return;
         }
         Player player = actor.requirePlayer();
+        Location startLocation = player.getLocation();
+
+        boolean success = plugin.getCropSprayerManager().createSprayer("sprayer_" + player.getUniqueId(), CropType.WHEAT, startLocation);
+        if (!success) {
+            actor.reply("Failed to spawn sprayer.");
+            return;
+        }
+        actor.reply("Sprayer spawned successfully.");
     }
 }

@@ -27,11 +27,11 @@ public class CropSprayersCommand {
     @Description("Reloads config files from disk.")
     public void reload(BukkitCommandActor actor) {
         try {
-            plugin.reloadDefaultConfig();
+            plugin.reloadAllConfigs();
             actor.reply(plugin.getMessagesConfig().getConfigReloaded());
         } catch (Exception e) {
             actor.error(plugin.getMessagesConfig().getConfigReloadFailed(e.getMessage()));
-            plugin.getLogger().severe("Failed to reload config.yml: " + e);
+            plugin.getLogger().severe("Failed to reload configs " + e);
         }
     }
 }

@@ -15,6 +15,7 @@
         <lamp.version>4.0.0-rc.18</lamp.version>
         <adventure.version>4.26.1</adventure.version>
         <configlib.version>4.8.1</configlib.version>
+        <lombok.version>1.18.46</lombok.version>
     </properties>
 
     <repositories>
@@ -62,7 +63,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.46</version>
+            <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
@@ -78,6 +79,27 @@
         </resources>
 
         <plugins>
+            <!--
+              Lombok must be declared as an annotation processor path. JDK 23+
+              no longer enables annotation processing implicitly, so without
+              this every @Getter-generated method fails to resolve under Maven
+              (IntelliJ's own Lombok plugin hides the problem in the IDE).
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.15.0</version>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
