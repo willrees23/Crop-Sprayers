@@ -7,11 +7,14 @@
     <groupId>com.github.willrees23</groupId>
     <artifactId>crop-sprayers</artifactId>
     <version>1.0.0</version>
-    <name>CropSprayers</name>
+    <name>Crop Sprayers</name>
 
     <properties>
         <maven.compiler.release>21</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <lamp.version>4.0.0-rc.18</lamp.version>
+        <adventure.version>4.26.1</adventure.version>
+        <configlib.version>4.8.1</configlib.version>
     </properties>
 
     <repositories>
@@ -30,6 +33,48 @@
             <version>26.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+
+        <!--
+          Lamp commands framework. lamp.common must be declared explicitly:
+          lamp.bukkit's POM lists it at runtime scope, so it is NOT on the
+          compile classpath transitively (@Command etc. would not resolve).
+        -->
+        <dependency>
+            <groupId>io.github.revxrsal</groupId>
+            <artifactId>lamp.common</artifactId>
+            <version>${lamp.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.revxrsal</groupId>
+            <artifactId>lamp.bukkit</artifactId>
+            <version>${lamp.version}</version>
+        </dependency>
+
+        <!--
+          Configlib. The -paper artifact pulls in -yaml and -core, and adds
+          serializers for Bukkit's ConfigurationSerializable types (ItemStack,
+          Location, ...). It also contains a JavaPlugin class, which is inert
+          here - Bukkit only instantiates the main class named in plugin.yml.
+        -->
+        <dependency>
+            <groupId>de.exlll</groupId>
+            <artifactId>configlib-paper</artifactId>
+            <version>${configlib.version}</version>
+        </dependency>
+
+        <!--
+          Compile-time only. BukkitCommandActor declares reply(ComponentLike),
+          so javac must see adventure to resolve ANY call on that interface,
+          even reply(String). Paper ships adventure at runtime; Spigot does
+          not, so stick to the String-based reply/error methods. Never shade
+          this - see the shade plugin's exclude below.
+        -->
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-api</artifactId>
+            <version>${adventure.version}</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -40,5 +85,62 @@
                 <filtering>true</filtering>
             </resource>
         </resources>
+
+        <plugins>
+            <!--
+              Lamp is not supplied by the server, so it has to be shaded into
+              the plugin jar. Relocating it avoids clashing with any other
+              plugin that ships its own copy of Lamp.
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.6.2</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <relocations>
+                                <relocation>
+                                    <pattern>revxrsal.commands</pattern>
+                                    <shadedPattern>com.github.willrees23.libs.lamp</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>de.exlll.configlib</pattern>
+                                    <shadedPattern>com.github.willrees23.libs.configlib</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <!-- snakeyaml-engine, pulled in by configlib-yaml.
+                                         Distinct from the org.yaml.snakeyaml that
+                                         Spigot ships, but relocate it anyway. -->
+                                    <pattern>org.snakeyaml.engine</pattern>
+                                    <shadedPattern>com.github.willrees23.libs.snakeyaml</shadedPattern>
+                                </relocation>
+                            </relocations>
+                            <artifactSet>
+                                <excludes>
+                                    <exclude>net.kyori:*</exclude>
+                                </excludes>
+                            </artifactSet>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                        <exclude>module-info.class</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 </project>
