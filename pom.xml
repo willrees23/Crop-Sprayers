@@ -7,7 +7,7 @@
     <groupId>com.github.willrees23</groupId>
     <artifactId>crop-sprayers</artifactId>
     <version>1.0.0</version>
-    <name>Crop Sprayers</name>
+    <name>CropSprayers</name>
 
     <properties>
         <maven.compiler.release>21</maven.compiler.release>
