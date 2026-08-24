@@ -3,11 +3,6 @@ package com.github.willrees23.config;
 import de.exlll.configlib.Comment;
 import de.exlll.configlib.Configuration;
 
-/**
- * Backing model for config.yml. Configlib maps fields to YAML keys and
- * writes the @Comment text above each one. Field initialisers are the
- * defaults used when the file (or an individual key) is missing.
- */
 @Configuration
 public final class SprayerConfig {
 

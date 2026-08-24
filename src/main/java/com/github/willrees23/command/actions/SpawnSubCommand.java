@@ -1,4 +1,4 @@
-package com.github.willrees23.command;
+package com.github.willrees23.command.actions;
 
 import com.github.willrees23.CropSprayersPlugin;
 import revxrsal.commands.annotation.Command;
@@ -9,18 +9,12 @@ import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 @Command({"cropsprayers", "cropspray", "csp"})
 @CommandPermission("cropsprayers.admin")
-public class CropSprayersCommand {
+public class SpawnSubCommand {
 
     private final CropSprayersPlugin plugin;
 
-    public CropSprayersCommand() {
+    public SpawnSubCommand() {
         this.plugin = CropSprayersPlugin.getInstance();
-    }
-
-    @Subcommand("version")
-    @Description("Shows the plugin version.")
-    public void version(BukkitCommandActor actor) {
-        actor.reply("&aCrop Sprayers &7v" + plugin.getDescription().getVersion());
     }
 
     @Subcommand("reload")
