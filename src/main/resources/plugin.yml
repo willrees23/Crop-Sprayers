@@ -1,0 +1,6 @@
+name: ${project.name}
+version: ${project.version}
+main: com.github.willrees23.CropSprayersPlugin
+api-version: 1.21
+author: willrees23
+description: Crop sprayers for Minecraft farms.
