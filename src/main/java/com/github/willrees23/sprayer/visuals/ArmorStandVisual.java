@@ -80,7 +80,7 @@ public class ArmorStandVisual {
 
             EntityEquipment equipment = spawned.getEquipment();
             if (equipment != null) {
-                ItemStack item = CustomHeadUtil.createCustomSkull(sprayer.getCrop().getDisplayTexture());
+                ItemStack item = CustomHeadUtil.createCustomSkull(sprayer.getCropType().getDisplayTexture());
                 equipment.setHelmet(item);
             }
         });

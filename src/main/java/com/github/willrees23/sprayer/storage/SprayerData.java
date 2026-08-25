@@ -13,7 +13,7 @@ public record SprayerData(String id, CropType crop, String world, double x, doub
         World world = location.getWorld();
         return new SprayerData(
                 sprayer.getId(),
-                sprayer.getCrop(),
+                sprayer.getCropType(),
                 world == null ? null : world.getName(),
                 location.getX(),
                 location.getY(),

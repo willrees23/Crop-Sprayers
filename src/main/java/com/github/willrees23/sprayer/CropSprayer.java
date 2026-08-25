@@ -21,7 +21,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class CropSprayer {
 
     private final String id;
-    private final CropType crop;
+    private final CropType cropType;
     private final Location location;
     private final int radius;
     private final int rate = 20 * 2; // 20 ticks = 1 second
@@ -29,9 +29,9 @@ public class CropSprayer {
     private final BukkitTask task;
     private final CropSprayerVisual visual;
 
-    public CropSprayer(String id, CropType crop, Location location, int radius, List<Location> targetBlocks) {
+    public CropSprayer(String id, CropType cropType, Location location, int radius, List<Location> targetBlocks) {
         this.id = id;
-        this.crop = crop;
+        this.cropType = cropType;
         this.location = location;
         this.radius = radius;
         this.targetBlocks = targetBlocks;
@@ -80,7 +80,7 @@ public class CropSprayer {
 
     // plant crop and set it to fully grown
     private void plant(Block block) {
-        block.setType(crop.getMaterial());
+        block.setType(cropType.getMaterial());
 
         BlockData data = block.getBlockData();
         if (data instanceof Ageable ageable) {

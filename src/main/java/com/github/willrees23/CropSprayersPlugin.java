@@ -2,6 +2,7 @@ package com.github.willrees23;
 
 import com.github.willrees23.command.CropSprayersCommand;
 import com.github.willrees23.command.actions.CreateSubCommand;
+import com.github.willrees23.command.actions.ListSubCommand;
 import com.github.willrees23.command.actions.RemoveSubCommand;
 import com.github.willrees23.command.parameters.CropSprayerParameterType;
 import com.github.willrees23.config.DefaultConfig;
@@ -46,7 +47,7 @@ public class CropSprayersPlugin extends JavaPlugin {
         lamp = BukkitLamp.builder(this)
                 .parameterTypes(types -> types.addParameterType(CropSprayer.class, new CropSprayerParameterType()))
                 .build();
-        lamp.register(new CropSprayersCommand(), new CreateSubCommand(), new RemoveSubCommand());
+        lamp.register(new CropSprayersCommand(), new CreateSubCommand(), new RemoveSubCommand(), new ListSubCommand());
 
         // worlds are loaded before plugins enable, so saved locations resolve here
         cropSprayerManager.loadSprayers();

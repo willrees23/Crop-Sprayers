@@ -20,7 +20,7 @@ public class CropSprayersCommand {
     @Subcommand("version")
     @Description("Shows the plugin version.")
     public void version(BukkitCommandActor actor) {
-        actor.reply("&aCrop Sprayers &7v" + plugin.getDescription().getVersion());
+        actor.reply("&aCrop Sprayers &ev" + plugin.getDescription().getVersion());
     }
 
     @Subcommand("reload")
