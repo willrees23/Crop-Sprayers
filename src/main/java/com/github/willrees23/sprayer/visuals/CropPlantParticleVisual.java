@@ -6,10 +6,9 @@ import org.bukkit.Particle;
 
 public class CropPlantParticleVisual {
 
+    private static final Particle PARTICLE_TYPE = Particle.FIREWORK;
     private final CropSprayer sprayer;
     private final ArmorStandVisual armorStand;
-
-    private static final Particle PARTICLE_TYPE = Particle.FIREWORK;
 
     public CropPlantParticleVisual(CropSprayer sprayer, ArmorStandVisual armorStand) {
         this.sprayer = sprayer;

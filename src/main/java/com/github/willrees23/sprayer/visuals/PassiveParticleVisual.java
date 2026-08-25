@@ -8,12 +8,11 @@ import org.bukkit.scheduler.BukkitTask;
 
 public class PassiveParticleVisual {
 
+    private static final Particle PARTICLE_TYPE = Particle.FIREWORK;
+    private static final int RATE_TICKS = 5;
     private final CropSprayer sprayer;
     private final ArmorStandVisual armorStand;
     private BukkitTask particleTask;
-
-    private static final Particle PARTICLE_TYPE = Particle.FIREWORK;
-    private static final int RATE_TICKS = 5;
 
     public PassiveParticleVisual(CropSprayer sprayer, ArmorStandVisual armorStand) {
         this.sprayer = sprayer;

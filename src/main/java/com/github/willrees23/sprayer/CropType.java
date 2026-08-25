@@ -15,7 +15,7 @@ public enum CropType {
 
     /**
      *
-     * @param material the material of the crop in the Spigot api
+     * @param material       the material of the crop in the Spigot api
      * @param displayTexture the texture of the custom head, taken from <a href="https://minecraft-heads.com/custom-heads">minecraft-heads.com</a>
      */
     CropType(Material material, String displayTexture) {

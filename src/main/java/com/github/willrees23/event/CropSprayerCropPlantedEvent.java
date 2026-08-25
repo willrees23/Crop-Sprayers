@@ -20,12 +20,12 @@ public class CropSprayerCropPlantedEvent extends Event {
         this.cropBlock = cropBlock;
     }
 
-    @Override
-    public @NonNull HandlerList getHandlers() {
+    public static @NonNull HandlerList getHandlerList() {
         return HANDLERS;
     }
 
-    public static @NonNull HandlerList getHandlerList() {
+    @Override
+    public @NonNull HandlerList getHandlers() {
         return HANDLERS;
     }
 }

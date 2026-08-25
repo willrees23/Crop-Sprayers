@@ -19,8 +19,6 @@ public class RemoveSubCommand {
         this.plugin = CropSprayersPlugin.getInstance();
     }
 
-    // the sprayer is resolved by CropSprayerParameterType, so an unknown id is
-    // rejected before this method runs
     @Subcommand("remove")
     @Description("Remove a sprayer by its id.")
     public void remove(BukkitCommandActor actor, @Named("sprayer") CropSprayer sprayer) {
