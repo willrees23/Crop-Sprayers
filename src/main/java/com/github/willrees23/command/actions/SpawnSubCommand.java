@@ -22,7 +22,9 @@ public class SpawnSubCommand {
 
     @Subcommand("spawn")
     @Description("Spawn a sprayer at your current location.")
-    public void spawn(BukkitCommandActor actor) {
+    public void spawn(BukkitCommandActor actor,
+                      String name,
+                      CropType cropType) {
         if (actor.isConsole()) {
             actor.reply(plugin.getMessagesConfig().getPlayerOnlyCommand());
             return;
@@ -30,7 +32,7 @@ public class SpawnSubCommand {
         Player player = actor.requirePlayer();
         Location startLocation = player.getLocation();
 
-        boolean success = plugin.getCropSprayerManager().createSprayer("sprayer_" + player.getUniqueId(), CropType.WHEAT, startLocation);
+        boolean success = plugin.getCropSprayerManager().createSprayer(name, cropType, startLocation);
         if (!success) {
             actor.reply("&cFailed to spawn sprayer.");
             return;
