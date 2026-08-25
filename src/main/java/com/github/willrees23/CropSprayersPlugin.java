@@ -58,7 +58,7 @@ public class CropSprayersPlugin extends JavaPlugin {
         // stops the tasks and clears the armour stands, but leaves the files in
         // place so every sprayer returns on the next start
         if (cropSprayerManager != null) {
-            cropSprayerManager.shutdown();
+            cropSprayerManager.stopSprayers();
         }
 
         if (lamp != null) {

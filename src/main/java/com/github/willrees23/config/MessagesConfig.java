@@ -8,12 +8,17 @@ import lombok.Getter;
 public final class MessagesConfig {
 
     private String configReloaded = "&aConfig files reloaded.";
+    private String sprayersReloaded = "&aReloaded &7%count%&a sprayer(s) from disk.";
 
     private String configReloadFailed = "&cFailed to reload config files: %error%";
     private String playerOnlyCommand = "&cPlayer only command.";
     private String sprayerNotFound = "&cNo sprayer with the id &7%id%&c.";
     private String sprayerRemoved = "&aRemoved sprayer &7%id%&a.";
     private String sprayerRemoveFailed = "&cFailed to remove sprayer &7%id%&c.";
+
+    public String getSprayersReloaded(int count) {
+        return sprayersReloaded.replace("%count%", String.valueOf(count));
+    }
 
     public String getConfigReloadFailed(String error) {
         return configReloadFailed.replace("%error%", error);

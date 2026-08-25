@@ -33,8 +33,13 @@ public class CropSprayerManager implements Listener {
         return null;
     }
 
+    public int reloadSprayers() {
+        stopSprayers();
+        return loadSprayers();
+    }
+
     // restores every saved sprayer. call once on enable, after the worlds exist
-    public void loadSprayers() {
+    public int loadSprayers() {
         int restored = 0;
 
         for (SprayerData data : storage.loadAll()) {
@@ -65,6 +70,7 @@ public class CropSprayerManager implements Listener {
         if (restored > 0) {
             plugin.getLogger().info("Restored " + restored + " sprayer(s) from disk.");
         }
+        return restored;
     }
 
     public boolean createSprayer(String id, CropType crop, Location location) {
@@ -107,8 +113,7 @@ public class CropSprayerManager implements Listener {
         return true;
     }
 
-    // stops every sprayer without deleting it, so they all come back next start
-    public void shutdown() {
+    public void stopSprayers() {
         for (CropSprayer sprayer : activeSprayers) {
             sprayer.despawn();
         }

@@ -24,14 +24,17 @@ public class CropSprayersCommand {
     }
 
     @Subcommand("reload")
-    @Description("Reloads config files from disk.")
+    @Description("Reloads config files and sprayers from disk.")
     public void reload(BukkitCommandActor actor) {
         try {
             plugin.reloadAllConfigs();
             actor.reply(plugin.getMessagesConfig().getConfigReloaded());
+
+            int restored = plugin.getCropSprayerManager().reloadSprayers();
+            actor.reply(plugin.getMessagesConfig().getSprayersReloaded(restored));
         } catch (Exception e) {
             actor.error(plugin.getMessagesConfig().getConfigReloadFailed(e.getMessage()));
-            plugin.getLogger().severe("Failed to reload configs " + e);
+            plugin.getLogger().severe("Failed to reload " + e);
         }
     }
 }
