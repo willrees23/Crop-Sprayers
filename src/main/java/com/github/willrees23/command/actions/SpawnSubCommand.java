@@ -32,9 +32,9 @@ public class SpawnSubCommand {
 
         boolean success = plugin.getCropSprayerManager().createSprayer("sprayer_" + player.getUniqueId(), CropType.WHEAT, startLocation);
         if (!success) {
-            actor.reply("Failed to spawn sprayer.");
+            actor.reply("&cFailed to spawn sprayer.");
             return;
         }
-        actor.reply("Sprayer spawned successfully.");
+        actor.reply("&aSprayer spawned at your location!");
     }
 }

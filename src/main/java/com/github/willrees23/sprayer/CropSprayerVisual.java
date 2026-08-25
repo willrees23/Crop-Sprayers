@@ -1,6 +1,8 @@
 package com.github.willrees23.sprayer;
 
 import com.github.willrees23.CropSprayersPlugin;
+import com.github.willrees23.util.CustomHeadUtil;
+import com.github.willrees23.util.MathsUtil;
 import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -13,37 +15,23 @@ import org.bukkit.util.EulerAngle;
 // the physical representation of a crop sprayer in the world
 public class CropSprayerVisual {
 
-    // Ticks for one full turn. Higher = slower.
+    // Ticks for one full turn. Higher = slower
     private static final int ROTATION_PERIOD_TICKS = 160; // 8 seconds
 
-    // Ticks for one full up-down-up bob.
+    // Ticks for one full up-down-up bob
     private static final int BOB_PERIOD_TICKS = 80; // 4 seconds
 
-    // How far the crop travels above and below its resting height, in blocks.
+    // How far the crop travels above and below its resting height, in blocks
     private static final double BOB_AMPLITUDE = 0.15;
 
-    /*
-     * Armour stand head poses are plain entity metadata - the client snaps to
-     * each new value instead of interpolating, so this has to run every tick to
-     * look smooth. A display entity would interpolate and could update at a
-     * fifth of this rate, but armour stands work all the way back to 1.8.
-     */
+    // Interval at which to update the animation
     private static final int UPDATE_INTERVAL_TICKS = 1;
 
-    /*
-     * Distance from the armour stand's own location up to where its head item
-     * renders, so the crop floats at the centre of the sprayer block rather
-     * than above it. Tuned for a small armour stand; adjust to taste in game.
-     */
+    // Height of the armour stand's head, used to position the crop correctly
     private static final double HEAD_HEIGHT = 0.7;
 
-    /*
-     * Wraps where both the spin and the bob are back to their starting phase,
-     * so neither jumps. Unlike a display entity this does not need doubling for
-     * the quaternion period - a head pose of 2*PI and one of 0 render
-     * identically, and nothing interpolates between them.
-     */
-    private static final int CYCLE_TICKS = lcm(ROTATION_PERIOD_TICKS, BOB_PERIOD_TICKS);
+    // number of ticks after which both the spin & bob are back to the start
+    private static final int CYCLE_TICKS = MathsUtil.lcm(ROTATION_PERIOD_TICKS, BOB_PERIOD_TICKS);
 
     private final CropSprayer sprayer;
 
@@ -62,7 +50,7 @@ public class CropSprayerVisual {
         if (stand != null && !stand.isDead()) return;
 
         // centre of the sprayer block, dropped so the HEAD lands on that centre
-        baseLocation = sprayer.getLocation().clone().add(0.5, 0.5 - HEAD_HEIGHT, 0.5);
+        baseLocation = sprayer.getLocation().getBlock().getLocation().clone().add(0.5, 0, 0.5);
         World world = baseLocation.getWorld();
         if (world == null) return;
 
@@ -73,16 +61,13 @@ public class CropSprayerVisual {
             spawned.setSmall(true);
             spawned.setBasePlate(false);
             spawned.setArms(false);
-            spawned.setMarker(true);   // no hitbox, so players cannot hit or collide with it
+            spawned.setMarker(true);
             spawned.setPersistent(false);
 
             EntityEquipment equipment = spawned.getEquipment();
             if (equipment != null) {
-                // No setHelmetDropChance here - drop chances are Mob-only and an
-                // ArmorStand is a LivingEntity but not a Mob, so it throws.
-                // Nothing can drop the helmet anyway: the stand is invulnerable
-                // and a marker, and remove() never drops equipment.
-                equipment.setHelmet(new ItemStack(sprayer.getCrop().getDisplayItem()));
+                ItemStack item = CustomHeadUtil.createCustomSkull(sprayer.getCrop().getDisplayTexture());
+                equipment.setHelmet(item);
             }
         });
 
@@ -124,13 +109,5 @@ public class CropSprayerVisual {
 
         // bob: the client smooths entity movement, so teleporting reads as glide
         stand.teleport(baseLocation.clone().add(0, bob, 0));
-    }
-
-    private static int lcm(int a, int b) {
-        return a / gcd(a, b) * b;
-    }
-
-    private static int gcd(int a, int b) {
-        return b == 0 ? a : gcd(b, a % b);
     }
 }
