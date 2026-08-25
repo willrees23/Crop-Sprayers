@@ -48,11 +48,23 @@ public class ArmorStandVisual {
         this.sprayer = sprayer;
     }
 
+    // starts the animation. the stand itself is created by the first tick that
+    // finds its chunk loaded, which may be immediately or much later
     public void spawn() {
-        if (stand != null && !stand.isDead()) return;
+        if (animationTask != null) return;
 
         // centre of the sprayer block, dropped so the HEAD lands on that centre
         baseLocation = sprayer.getLocation().getBlock().getLocation().clone().add(0.5, 0, 0.5);
+        if (baseLocation.getWorld() == null) return;
+
+        elapsedTicks = 0;
+
+        CropSprayersPlugin plugin = CropSprayersPlugin.getInstance();
+        animationTask = plugin.getServer().getScheduler()
+                .runTaskTimer(plugin, this::tick, 0L, UPDATE_INTERVAL_TICKS);
+    }
+
+    private void createStand() {
         World world = baseLocation.getWorld();
         if (world == null) return;
 
@@ -72,13 +84,6 @@ public class ArmorStandVisual {
                 equipment.setHelmet(item);
             }
         });
-
-        elapsedTicks = 0;
-        applyPose();
-
-        CropSprayersPlugin plugin = CropSprayersPlugin.getInstance();
-        animationTask = plugin.getServer().getScheduler()
-                .runTaskTimer(plugin, this::tick, UPDATE_INTERVAL_TICKS, UPDATE_INTERVAL_TICKS);
     }
 
     public void despawn() {
@@ -98,13 +103,24 @@ public class ArmorStandVisual {
     }
 
     private void tick() {
+        if (baseLocation == null) return;
+
         if (stand == null || stand.isDead()) {
-            despawn();
-            return;
+            if (!isChunkLoaded()) return;
+
+            createStand();
+            if (stand == null) return;
         }
 
         elapsedTicks = (elapsedTicks + UPDATE_INTERVAL_TICKS) % CYCLE_TICKS;
         applyPose();
+    }
+
+    private boolean isChunkLoaded() {
+        World world = baseLocation.getWorld();
+        if (world == null) return false;
+
+        return world.isChunkLoaded(baseLocation.getBlockX() >> 4, baseLocation.getBlockZ() >> 4);
     }
 
     private void applyPose() {

@@ -3,6 +3,7 @@ package com.github.willrees23.sprayer.visuals;
 import com.github.willrees23.CropSprayersPlugin;
 import com.github.willrees23.sprayer.CropSprayer;
 import org.bukkit.Particle;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.scheduler.BukkitTask;
 
 public class PassiveParticleVisual {
@@ -35,14 +36,14 @@ public class PassiveParticleVisual {
     }
 
     private void emit() {
-        if (armorStand.getStand() == null) {
-            despawn();
-            return;
-        }
+        ArmorStand stand = armorStand.getStand();
 
-        armorStand.getStand().getWorld().spawnParticle(
+        // the stand comes and goes with its chunk, so skip this tick rather
+        if (stand == null || stand.isDead()) return;
+
+        stand.getWorld().spawnParticle(
                 PARTICLE_TYPE,
-                armorStand.getStand().getLocation().add(0, 1, 0),
+                stand.getLocation().add(0, 1, 0),
                 2, // count
                 0.4, 0.1, 0.4, // offsetX, offsetY, offsetZ
                 0.001 // extra
