@@ -1,6 +1,7 @@
 package com.github.willrees23.sprayer;
 
 import com.github.willrees23.CropSprayersPlugin;
+import com.github.willrees23.config.SprayerSettings;
 import com.github.willrees23.sprayer.storage.SprayerData;
 import com.github.willrees23.sprayer.storage.SprayerStorage;
 import lombok.Getter;
@@ -49,7 +50,15 @@ public class CropSprayerManager implements Listener {
                 continue;
             }
 
-            spawnSprayer(data.id(), data.crop(), location);
+            SprayerSettings settings = data.settings();
+            boolean backfill = settings == null;
+            if (backfill) settings = plugin.getDefaultConfig().getSprayerDefaults();
+
+            CropSprayer sprayer = spawnSprayer(data.id(), data.crop(), location, settings);
+            if (backfill) {
+                storage.save(SprayerData.from(sprayer));
+                plugin.getLogger().info("Filled in the default settings for sprayer " + data.id() + ".");
+            }
             restored++;
         }
 
@@ -77,7 +86,8 @@ public class CropSprayerManager implements Listener {
             return false;
         }
 
-        CropSprayer sprayer = spawnSprayer(id, crop, location);
+        // snapshot the config defaults now, so later config edits leave this one alone
+        CropSprayer sprayer = spawnSprayer(id, crop, location, plugin.getDefaultConfig().getSprayerDefaults());
         storage.save(SprayerData.from(sprayer));
 
         plugin.getLogger().info("Created new sprayer with id " + id + " at location " + location);
@@ -107,11 +117,11 @@ public class CropSprayerManager implements Listener {
 
     // builds the target area and starts the sprayer. deliberately does not touch
     // storage, so loading from disk does not immediately write the same file back
-    private CropSprayer spawnSprayer(String id, CropType crop, Location location) {
-        // go top down in x and y to get all the blocks within the configured
-        // radius around the sprayer, from +maxHeight down to -maxHeight
-        int maxHeight = plugin.getDefaultConfig().getMaxSprayHeightDistance();
-        int radius = plugin.getDefaultConfig().getSprayRadius();
+    private CropSprayer spawnSprayer(String id, CropType crop, Location location, SprayerSettings settings) {
+        // go top down in x and y to get all the blocks within the sprayer's own
+        // radius, from +maxHeight down to -maxHeight
+        int maxHeight = settings.getMaxSprayHeightDistance();
+        int radius = settings.getSprayRadius();
 
         List<Location> targetBlocks = new ArrayList<>();
         for (int x = -radius; x <= radius; x++) {
@@ -123,7 +133,7 @@ public class CropSprayerManager implements Listener {
             }
         }
 
-        CropSprayer sprayer = new CropSprayer(id, crop, location, radius, targetBlocks);
+        CropSprayer sprayer = new CropSprayer(id, crop, location, settings, targetBlocks);
         activeSprayers.add(sprayer);
         return sprayer;
     }

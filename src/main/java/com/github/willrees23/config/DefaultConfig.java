@@ -8,9 +8,10 @@ import lombok.Getter;
 @Configuration
 public final class DefaultConfig {
 
-    @Comment("The maximum height gap between the sprayer and the crop to be sprayed.")
-    private int maxSprayHeightDistance = 5;
-
-    @Comment("Horizontal radius that a sprayer covers.")
-    private int sprayRadius = 3;
+    @Comment({
+            "Settings copied onto a sprayer at the moment it is created.",
+            "Changing them only affects sprayers created afterwards - every existing",
+            "sprayer carries its own copy in sprayers/<id>.yml, edit it there instead."
+    })
+    private SprayerSettings sprayerDefaults = new SprayerSettings();
 }
