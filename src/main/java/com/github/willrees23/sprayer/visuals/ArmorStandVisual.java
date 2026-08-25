@@ -1,6 +1,7 @@
-package com.github.willrees23.sprayer;
+package com.github.willrees23.sprayer.visuals;
 
 import com.github.willrees23.CropSprayersPlugin;
+import com.github.willrees23.sprayer.CropSprayer;
 import com.github.willrees23.util.CustomHeadUtil;
 import com.github.willrees23.util.MathsUtil;
 import lombok.Getter;
@@ -12,8 +13,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.EulerAngle;
 
-// the physical representation of a crop sprayer in the world
-public class CropSprayerVisual {
+// the floating crop head above a sprayer: an invisible armour stand wearing the
+// crop's custom head, spun and bobbed on a repeating task
+public class ArmorStandVisual {
 
     // Ticks for one full turn. Higher = slower
     private static final int ROTATION_PERIOD_TICKS = 160; // 8 seconds
@@ -42,7 +44,7 @@ public class CropSprayerVisual {
     private BukkitTask animationTask;
     private int elapsedTicks;
 
-    public CropSprayerVisual(CropSprayer sprayer) {
+    public ArmorStandVisual(CropSprayer sprayer) {
         this.sprayer = sprayer;
     }
 
@@ -88,6 +90,11 @@ public class CropSprayerVisual {
             stand.remove();
             stand = null;
         }
+    }
+
+    // where the head currently sits, for anything that wants to emit from it
+    public Location getHeadLocation() {
+        return stand == null ? null : stand.getLocation();
     }
 
     private void tick() {

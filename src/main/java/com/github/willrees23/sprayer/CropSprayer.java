@@ -1,6 +1,7 @@
 package com.github.willrees23.sprayer;
 
 import com.github.willrees23.CropSprayersPlugin;
+import com.github.willrees23.sprayer.visuals.CropSprayerVisual;
 import lombok.Getter;
 import org.bukkit.Location;
 import org.bukkit.Material;
