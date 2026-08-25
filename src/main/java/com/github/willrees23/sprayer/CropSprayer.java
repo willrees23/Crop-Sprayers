@@ -40,6 +40,14 @@ public class CropSprayer {
         this.visual.spawn();
     }
 
+    // stops the sprayer and clears it from the world. does not touch disk:
+    // removal from storage is the manager's job, so that a server shutdown can
+    // stop every sprayer without deleting it
+    public void despawn() {
+        task.cancel();
+        visual.despawn();
+    }
+
     // ticks at the rate set above
     private void spray() {
         // find valid farmland blocks within target area

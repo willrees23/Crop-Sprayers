@@ -6,25 +6,26 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Description;
+import revxrsal.commands.annotation.Named;
 import revxrsal.commands.annotation.Subcommand;
 import revxrsal.commands.bukkit.actor.BukkitCommandActor;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
 
 @Command({"cropsprayers", "cropspray", "csp"})
 @CommandPermission("cropsprayers.admin")
-public class SpawnSubCommand {
+public class CreateSubCommand {
 
     private final CropSprayersPlugin plugin;
 
-    public SpawnSubCommand() {
+    public CreateSubCommand() {
         this.plugin = CropSprayersPlugin.getInstance();
     }
 
-    @Subcommand("spawn")
-    @Description("Spawn a sprayer at your current location.")
-    public void spawn(BukkitCommandActor actor,
-                      String name,
-                      CropType cropType) {
+    @Subcommand("create")
+    @Description("Create a sprayer at your current location.")
+    public void create(BukkitCommandActor actor,
+                       String name,
+                       CropType cropType) {
         if (actor.isConsole()) {
             actor.reply(plugin.getMessagesConfig().getPlayerOnlyCommand());
             return;
@@ -34,9 +35,9 @@ public class SpawnSubCommand {
 
         boolean success = plugin.getCropSprayerManager().createSprayer(name, cropType, startLocation);
         if (!success) {
-            actor.reply("&cFailed to spawn sprayer.");
+            actor.reply("&cFailed to create sprayer.");
             return;
         }
-        actor.reply("&aSprayer spawned at your location!");
+        actor.reply("&aSprayer created at your location!");
     }
 }

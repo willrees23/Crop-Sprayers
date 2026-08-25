@@ -9,7 +9,7 @@ public class CropPlantParticleVisual {
     private final CropSprayer sprayer;
     private final ArmorStandVisual armorStand;
 
-    private static final Particle PARTICLE_TYPE = Particle.HAPPY_VILLAGER;
+    private static final Particle PARTICLE_TYPE = Particle.FIREWORK;
 
     public CropPlantParticleVisual(CropSprayer sprayer, ArmorStandVisual armorStand) {
         this.sprayer = sprayer;
