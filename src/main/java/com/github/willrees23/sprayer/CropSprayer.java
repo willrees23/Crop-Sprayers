@@ -1,8 +1,10 @@
 package com.github.willrees23.sprayer;
 
 import com.github.willrees23.CropSprayersPlugin;
+import com.github.willrees23.event.CropSprayerCropPlantedEvent;
 import com.github.willrees23.sprayer.visuals.CropSprayerVisual;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -77,5 +79,8 @@ public class CropSprayer {
             ageable.setAge(ageable.getMaximumAge());
             block.setBlockData(ageable);
         }
+
+        visual.getCropPlantParticles().spawn(block.getLocation());
+        Bukkit.getPluginManager().callEvent(new CropSprayerCropPlantedEvent(this, block));
     }
 }

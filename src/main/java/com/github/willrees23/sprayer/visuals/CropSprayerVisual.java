@@ -10,10 +10,14 @@ public class CropSprayerVisual {
 
     private final ArmorStandVisual armorStand;
     private final PassiveParticleVisual passiveParticles;
+    private final CropPlantParticleVisual cropPlantParticles;
 
     public CropSprayerVisual(CropSprayer sprayer) {
         this.armorStand = new ArmorStandVisual(sprayer);
         this.passiveParticles = new PassiveParticleVisual(sprayer, armorStand);
+
+        // not an ongoing animation, one-time effect when crop is planted
+        this.cropPlantParticles = new CropPlantParticleVisual(sprayer, armorStand);
     }
 
     public void spawn() {
